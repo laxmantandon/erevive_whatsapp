@@ -1,0 +1,18 @@
+include MANIFEST.in
+include requirements.txt
+include *.json
+include *.md
+include *.py
+include *.txt
+recursive-include erevive_whatsapp *.css
+recursive-include erevive_whatsapp *.csv
+recursive-include erevive_whatsapp *.html
+recursive-include erevive_whatsapp *.ico
+recursive-include erevive_whatsapp *.js
+recursive-include erevive_whatsapp *.json
+recursive-include erevive_whatsapp *.md
+recursive-include erevive_whatsapp *.png
+recursive-include erevive_whatsapp *.py
+recursive-include erevive_whatsapp *.svg
+recursive-include erevive_whatsapp *.txt
+recursive-exclude erevive_whatsapp *.pyc
