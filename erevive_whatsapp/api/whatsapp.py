@@ -24,7 +24,7 @@ def send_whatsapp_msg(doc, context, receivers):
             )
         from frappe.www.printview import get_letter_head 
         letter_head = get_letter_head(doc, 0)
-        pdf_data = get_pdf_data(doc.doctype, doc.name, default_print_format, letterhead=letter_head)
+        pdf_data = get_pdf_data(doc.doctype, doc.name, default_print_format, letterhead=letter_head, is_report=False, report_html=None)
         file_name = f"{random_string(30)}.pdf"
         folder_name = create_folder("Whatsapp", "Home")
         save_file(file_name, pdf_data, '', '', folder=folder_name, is_private=0)
