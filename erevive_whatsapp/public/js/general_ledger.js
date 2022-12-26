@@ -141,7 +141,18 @@ frappe.query_reports["General Ledger"] = {
             "fieldname": "presentation_currency",
             "label": __("Currency"),
             "fieldtype": "Select",
-            "options": erpnext.get_presentation_currency_list()
+            "options": [
+                "",
+                "AED",
+                "AUD",
+                "CHF",
+                "CNY",
+                "EUR",
+                "GBP",
+                "INR",
+                "JPY",
+                "USD"
+              ]//erpnext.get_presentation_currency_list()
         },
         {
             "fieldname": "cost_center",
@@ -206,6 +217,8 @@ frappe.query_reports["General Ledger"] = {
     }
 }
 
+erpnext.utils.add_dimensions('General Ledger', 15)
+
 function whatsapp(print_settings) {
     const base_url = frappe.urllib.get_base_url();
     const print_css = frappe.boot.print_css;
@@ -261,4 +274,3 @@ function whatsapp(print_settings) {
     // frappe.render_pdf(html, print_settings);
 }
 
-erpnext.utils.add_dimensions('General Ledger', 15)
