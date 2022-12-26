@@ -1,0 +1,92 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2022-12-24 23:54:11.976708",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "whatsapp_settings_section",
+  "url",
+  "column_break_2",
+  "version",
+  "section_break_4",
+  "token",
+  "section_break_6",
+  "phone_number_id",
+  "column_break_8",
+  "business_account_id"
+ ],
+ "fields": [
+  {
+   "description": "Ex : https://graph.facebook.com",
+   "fieldname": "url",
+   "fieldtype": "Data",
+   "label": "Url"
+  },
+  {
+   "description": "Ex v15.0",
+   "fieldname": "version",
+   "fieldtype": "Data",
+   "label": "Version"
+  },
+  {
+   "fieldname": "token",
+   "fieldtype": "Small Text",
+   "label": "Token"
+  },
+  {
+   "fieldname": "phone_number_id",
+   "fieldtype": "Data",
+   "label": "Phone Number Id"
+  },
+  {
+   "fieldname": "business_account_id",
+   "fieldtype": "Data",
+   "label": "Business Account Id"
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_4",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "section_break_6",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_8",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "whatsapp_settings_section",
+   "fieldtype": "Section Break",
+   "label": "Whatsapp Settings"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2022-12-24 23:58:03.111094",
+ "modified_by": "Administrator",
+ "module": "Erevive Whatsapp",
+ "name": "ETPL Whatsapp Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}
