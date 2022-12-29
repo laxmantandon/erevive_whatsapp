@@ -205,21 +205,27 @@ frappe.query_reports["General Ledger"] = {
         // console.log(report)
         report.page.add_inner_button("Whatsapp", function () {
 
-            let dialog = frappe.ui.get_print_settings(
-                false,
-                print_settings => whatsapp(print_settings),
-                frappe.query_report.report_doc.letter_head,
-                frappe.query_report.get_visible_columns()
-            );
-            frappe.query_report.add_portrait_warning(dialog);
-
+            frappe.prompt({
+                fieldtype: 'Link',
+                label: 'Whatsapp To',
+                options: 'Contact',
+                fieldname: 'contact'
+            }, (values) => {
+                let dialog = frappe.ui.get_print_settings(
+                    false,
+                    print_settings => whatsapp(print_settings, values),
+                    frappe.query_report.report_doc.letter_head,
+                    frappe.query_report.get_visible_columns()
+                );
+                frappe.query_report.add_portrait_warning(dialog);
+            })
         })
     }
 }
 
 // erpnext.utils.add_dimensions('General Ledger', 15)
 
-function whatsapp(print_settings) {
+function whatsapp(print_settings, receivers) {
     const base_url = frappe.urllib.get_base_url();
     const print_css = frappe.boot.print_css;
     const landscape = "Portrait";
@@ -265,7 +271,9 @@ function whatsapp(print_settings) {
     frappe.call({
         method: "erevive_whatsapp.api.whatsapp.send_whatsapp_report",
         args: {
-            html: html
+            html: html,
+            document_caption: cur_page.page.page.title,
+            contact: receivers.contact
         }
     }).then(response => {
         console.log(response)

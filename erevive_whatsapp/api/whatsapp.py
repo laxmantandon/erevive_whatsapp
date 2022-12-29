@@ -46,67 +46,71 @@ def send_whatsapp_msg(doc, notification, receivers):
         frappe.log_error(e)
         
 @frappe.whitelist()
-def send_whatsapp_report(html, receivers=['919926100041']):
+def send_whatsapp_report(html, document_caption, contact):
     try:
         url = frappe.db.get_single_value("ETPL Whatsapp Settings", "url")
-        version = frappe.db.get_single_value(
-            "ETPL Whatsapp Settings", "version")
-        phone_number_id = frappe.db.get_single_value(
-            "ETPL Whatsapp Settings", "phone_number_id")
-        token = frappe.db.get_single_value(
-            "ETPL Whatsapp Settings", "token")
+        version = frappe.db.get_single_value("ETPL Whatsapp Settings", "version")
+        phone_number_id = frappe.db.get_single_value("ETPL Whatsapp Settings", "phone_number_id")
+        token = frappe.db.get_single_value("ETPL Whatsapp Settings", "token")
         token = f"Bearer {token}"
         base_url = f"{url}/{version}/{phone_number_id}/messages"
 
         pdf_data = get_pdf_data(None, None, None, None, is_report=True, report_html=html)
-        file_name = f"{random_string(30)}.pdf"
+        s_file_name = f"{random_string(50)}.pdf"
         folder_name = create_folder("Whatsapp", "Home")
-        save_file(file_name, pdf_data, '', '', folder=folder_name, is_private=0)
-        document_link = f"{frappe.utils.get_url()}/files/{file_name}"
-                        
-        for receiver in receivers:
+        save_file(s_file_name, pdf_data, '', '', folder=folder_name, is_private=0)
+        s_document_link = f"{frappe.utils.get_url()}/files/{s_file_name}"
 
-            payload = json.dumps({
-                "messaging_product": "whatsapp",
-                "to": receiver,
-                "type": "template",
-                "template": {
-                    "name": "invoice",
-                    "language": {
-                        "code": "en_US"
+        receiver = frappe.db.get_value("Contact", contact, "mobile_no")
+
+        if not receiver:
+            frappe.throw("Mobile Number Not Specified")
+
+        import time
+        time.sleep(3)
+
+        payload = json.dumps({
+            "messaging_product": "whatsapp",
+            "to": receiver,
+            "type": "template",
+            "template": {
+                "name": "invoice",
+                "language": {
+                    "code": "en_US"
+                },
+                "components": [
+                    {
+                        "type": "header",
+                        "parameters": [
+                            {
+                                "type": "document",
+                                "document": {
+                                    "link": s_document_link,
+                                    "filename": document_caption
+                                }
+                            }
+                        ]
                     },
-                    "components": [
-                        {
-                            "type": "header",
-                            "parameters": [
-                                {
-                                    "type": "document",
-                                    "document": {
-                                        "link": document_link
-                                    }
-                                }
-                            ]
-                        },
-                        {
-                            "type": "body",
-                            "parameters": [
-                                {
-                                    "type": "text",
-                                    "text": "Report"
-                                }
-                            ]
-                        }
-                    ]
-                }
-            })
-            headers = {
-                'Authorization': token,
-                'Content-Type': 'application/json'
+                    {
+                        "type": "body",
+                        "parameters": [
+                            {
+                                "type": "text",
+                                "text": "Report"
+                            }
+                        ]
+                    }
+                ]
             }
+        })
+        headers = {
+            'Authorization': token,
+            'Content-Type': 'application/json'
+        }
 
-            response = make_post_request(
-                base_url, headers=headers, data=payload)
-            frappe.log_error(response)
+        response = make_post_request(
+            base_url, headers=headers, data=payload)
+        frappe.log_error(response)
         frappe.msgprint("Whatsapp Sent")
 
     except Exception as e:
@@ -180,5 +184,5 @@ def whatsapp_template(receiver, doc, notification, document_link):
     
     payload['template']['components'].append(document_body)
 
-    frappe.log_error(json.dumps(payload))
+    # frappe.log_error(json.dumps(payload))
     return payload
