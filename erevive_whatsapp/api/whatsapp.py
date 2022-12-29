@@ -156,7 +156,7 @@ def whatsapp_template(receiver, doc, notification, document_link):
                             "type": "document",
                             "document": {
                                 "link": document_link,
-                                "caption": f"{doc_data['doctype'] - {doc_data['name']}}"
+                                "caption": f"{doc_data['doctype']}-{doc_data['name']}"
                             }
                         }
                     ]
@@ -179,5 +179,5 @@ def whatsapp_template(receiver, doc, notification, document_link):
     
     payload['template']['components'].append(document_body)
 
-    frappe.log_error(json.dumps(payload))
+    # frappe.log_error(json.dumps(payload))
     return payload
