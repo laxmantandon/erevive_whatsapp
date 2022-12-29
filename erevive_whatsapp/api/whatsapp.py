@@ -147,7 +147,8 @@ def whatsapp_template(receiver, doc, notification, document_link):
     }
 
     attach_document = frappe.db.get_value("ETPL Whatsapp Template", notification.etpl_template_name, "attach_document")
-    
+    document_caption = doc.name
+
     if attach_document == True:
         document_header = {
                     "type": "header",
@@ -156,7 +157,7 @@ def whatsapp_template(receiver, doc, notification, document_link):
                             "type": "document",
                             "document": {
                                 "link": document_link,
-                                "caption": f"{doc_data['doctype']}-{doc_data['name']}"
+                                "filename": document_caption
                             }
                         }
                     ]
@@ -179,5 +180,5 @@ def whatsapp_template(receiver, doc, notification, document_link):
     
     payload['template']['components'].append(document_body)
 
-    # frappe.log_error(json.dumps(payload))
+    frappe.log_error(json.dumps(payload))
     return payload
