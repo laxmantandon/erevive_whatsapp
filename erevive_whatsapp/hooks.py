@@ -31,7 +31,7 @@ app_include_js = "/assets/erevive_whatsapp/js/general_ledger.js"
 # page_js = {"page" : "public/js/file.js"}
 
 # include js in doctype views
-# doctype_js = {"doctype" : "public/js/doctype.js"}
+doctype_js = {"Notification" : "public/js/notification.js"}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
@@ -179,3 +179,28 @@ user_data_fields = [
 #	"erevive_whatsapp.auth.validate"
 # ]
 
+fixtures = [
+	{
+		"dt": "Custom Field",
+		"filters": [
+			[
+				"name", "in", [
+					"etpl_template_section",
+					"etpl_template_name",
+					"etpl_template",
+					"etpl_template_fields"
+					]
+			]
+		]
+	},
+	{
+		"dt": "Property Setter",
+		"filters": [
+			[
+				"name", "in", [
+					"Notification-channel-options"
+				]
+			]
+		]
+	}
+]

@@ -5,15 +5,12 @@ from frappe.utils import random_string
 from frappe.utils.file_manager import save_file
 from frappe.core.doctype.file.file import create_new_folder
 
-def send_whatsapp_msg(doc, context, receivers):
+def send_whatsapp_msg(doc, notification, receivers):
     try:
         url = frappe.db.get_single_value("ETPL Whatsapp Settings", "url")
-        version = frappe.db.get_single_value(
-            "ETPL Whatsapp Settings", "version")
-        phone_number_id = frappe.db.get_single_value(
-            "ETPL Whatsapp Settings", "phone_number_id")
-        token = frappe.db.get_single_value(
-            "ETPL Whatsapp Settings", "token")
+        version = frappe.db.get_single_value("ETPL Whatsapp Settings", "version")
+        phone_number_id = frappe.db.get_single_value("ETPL Whatsapp Settings", "phone_number_id")
+        token = frappe.db.get_single_value("ETPL Whatsapp Settings", "token")
         token = f"Bearer {token}"
         base_url = f"{url}/{version}/{phone_number_id}/messages"
 
@@ -22,8 +19,10 @@ def send_whatsapp_msg(doc, context, receivers):
                 dict(property="default_print_format", doc_type=doc.doctype),
                 "value",
             )
-        from frappe.www.printview import get_letter_head 
+
+        from frappe.www.printview import get_letter_head
         letter_head = get_letter_head(doc, 0)
+
         pdf_data = get_pdf_data(doc.doctype, doc.name, default_print_format, letterhead=letter_head, is_report=False, report_html=None)
         file_name = f"{random_string(30)}.pdf"
         folder_name = create_folder("Whatsapp", "Home")
@@ -32,46 +31,14 @@ def send_whatsapp_msg(doc, context, receivers):
                         
         for receiver in receivers:
 
-            payload = json.dumps({
-                "messaging_product": "whatsapp",
-                "to": receiver,
-                "type": "template",
-                "template": {
-                    "name": "invoice",
-                    "language": {
-                        "code": "en_US"
-                    },
-                    "components": [
-                        {
-                            "type": "header",
-                            "parameters": [
-                                {
-                                    "type": "document",
-                                    "document": {
-                                        "link": document_link
-                                    }
-                                }
-                            ]
-                        },
-                        {
-                            "type": "body",
-                            "parameters": [
-                                {
-                                    "type": "text",
-                                    "text": doc.name
-                                }
-                            ]
-                        }
-                    ]
-                }
-            })
+            payload = whatsapp_template(receiver, doc, notification, document_link)
             headers = {
                 'Authorization': token,
                 'Content-Type': 'application/json'
             }
 
             response = make_post_request(
-                base_url, headers=headers, data=payload)
+                base_url, headers=headers, data=json.dumps(payload))
             frappe.log_error(response)
         frappe.msgprint("Whatsapp Sent")
 
@@ -125,7 +92,7 @@ def send_whatsapp_report(html, receivers=['919926100041']):
                             "parameters": [
                                 {
                                     "type": "text",
-                                    "text": "Document"
+                                    "text": "Report"
                                 }
                             ]
                         }
@@ -161,3 +128,56 @@ def create_folder(folder, parent):
         create_new_folder(folder, parent)
     
     return new_folder_name
+
+
+
+def whatsapp_template(receiver, doc, notification, document_link):
+    doc_data = doc.as_dict()
+    payload = {
+        "messaging_product": "whatsapp",
+        "to": receiver,
+        "type": "template",
+        "template": {
+            "name": notification.etpl_template_name,
+            "language": {
+                "code": "en_US" #frappe.db.get_value("ETPL Whatsapp Template", notification.etpl_template_name, "language")
+            },
+            "components": []
+        }
+    }
+
+    attach_document = frappe.db.get_value("ETPL Whatsapp Template", notification.etpl_template_name, "attach_document")
+    
+    if attach_document == True:
+        document_header = {
+                    "type": "header",
+                    "parameters": [
+                        {
+                            "type": "document",
+                            "document": {
+                                "link": document_link,
+                                "caption": f"{doc_data['doctype'] - {doc_data['name']}}"
+                            }
+                        }
+                    ]
+                }
+        payload['template']['components'].append(document_header)
+    
+    body_parameters = []
+    for field in notification.etpl_template_fields:
+        body_parameters.append(
+                {
+                    "type": "text",
+                    "text": doc_data[field.field_name]
+                }
+        )
+    
+    document_body = {
+        "type": "body",
+        "parameters": body_parameters
+    }
+    
+    payload['template']['components'].append(document_body)
+
+    frappe.log_error(json.dumps(payload))
+    return payload

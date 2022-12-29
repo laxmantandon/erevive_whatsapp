@@ -24,7 +24,7 @@ class SendNotification(Notification):
         try:
             if self.channel == 'WhatsApp':
                 receivers = self.get_receiver_list(doc, context)
-                send_whatsapp_msg(doc, context, receivers)
+                send_whatsapp_msg(doc, self, receivers)
         except:
             frappe.log_error(title='Failed to send notification', message=frappe.get_traceback())
 
