@@ -184,12 +184,14 @@ fixtures = [
 		"dt": "Custom Field",
 		"filters": [
 			[
-				"name", "in", [
-					"etpl_template_section",
-					"etpl_template_name",
-					"etpl_template",
-					"etpl_template_fields"
-					]
+				"fieldname",
+    			"in",
+       				(
+						"etpl_template_section",
+						"etpl_template_name",
+						"etpl_template",
+						"etpl_template_fields"
+					)
 			]
 		]
 	},
