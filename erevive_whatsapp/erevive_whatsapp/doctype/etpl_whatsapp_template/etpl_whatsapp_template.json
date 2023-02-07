@@ -64,10 +64,9 @@
   },
   {
    "fieldname": "language",
-   "fieldtype": "Link",
+   "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Language",
-   "options": "Language"
+   "label": "Language"
   }
  ],
  "index_web_pages_for_search": 1,
