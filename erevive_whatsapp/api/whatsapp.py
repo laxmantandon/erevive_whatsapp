@@ -114,7 +114,7 @@ def send_whatsapp_report(html, document_caption, contact):
         frappe.msgprint("Whatsapp Sent")
 
     except Exception as e:
-        frappe.log_error(e)
+        frappe.log_error(frappe.log_error(f"req = {str(payload)} Resp = {str(response)} err = {str(e)}"))
             
 def get_pdf_data(doctype:None, name: None, print_format: None, letterhead: None, is_report:False, report_html:None):
     
