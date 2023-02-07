@@ -110,7 +110,7 @@ def send_whatsapp_report(html, document_caption, contact):
 
         response = make_post_request(
             base_url, headers=headers, data=payload)
-        frappe.log_error(response)
+        frappe.log_error(f"req = {str(payload)} Resp = {str(response)}")
         frappe.msgprint("Whatsapp Sent")
 
     except Exception as e:
