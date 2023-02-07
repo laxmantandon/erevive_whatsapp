@@ -8,7 +8,7 @@ frappe.ui.form.on('Notification', {
         frm.doc.etpl_template_fields = "";
 	    frm.refresh_field("etpl_template_fields");
 
-	    var str = "\n";
+	    var str = "name\n";
 	    var doc_fields = frappe.get_meta(frm.doc.document_type).fields;
 	    doc_fields.forEach(element => {
 	        if(element.fieldtype == "Section Break" || element.fieldtype == "Column Break"){

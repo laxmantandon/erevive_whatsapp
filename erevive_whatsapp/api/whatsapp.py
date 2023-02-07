@@ -144,7 +144,7 @@ def whatsapp_template(receiver, doc, notification, document_link):
         "template": {
             "name": notification.etpl_template_name,
             "language": {
-                "code": "en_US" #frappe.db.get_value("ETPL Whatsapp Template", notification.etpl_template_name, "language")
+                "code": frappe.db.get_value("ETPL Whatsapp Template", notification.etpl_template_name, "language")
             },
             "components": []
         }
@@ -173,7 +173,7 @@ def whatsapp_template(receiver, doc, notification, document_link):
         body_parameters.append(
                 {
                     "type": "text",
-                    "text": doc_data[field.field_name]
+                    "text": str(doc_data[field.field_name])
                 }
         )
     
