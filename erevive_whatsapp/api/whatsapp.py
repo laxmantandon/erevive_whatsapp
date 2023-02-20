@@ -26,8 +26,8 @@ def send_whatsapp_msg(doc, notification, receivers):
         pdf_data = get_pdf_data(doc.doctype, doc.name, default_print_format, letterhead=letter_head, is_report=False, report_html=None)
         file_name = f"{random_string(30)}.pdf"
         folder_name = create_folder("Whatsapp", "Home")
-        save_file(file_name, pdf_data, '', '', folder=folder_name, is_private=0)
-        document_link = f"{frappe.utils.get_url()}/files/{file_name}"
+        x = save_file(file_name, pdf_data, '', '', folder=folder_name, is_private=0)
+        document_link = f"{frappe.utils.get_url()}/files/{x.file_name}"
                         
         for receiver in receivers:
 
@@ -58,8 +58,8 @@ def send_whatsapp_report(html, document_caption, contact):
         pdf_data = get_pdf_data(None, None, None, None, is_report=True, report_html=html)
         s_file_name = f"{random_string(50)}.pdf"
         folder_name = create_folder("Whatsapp", "Home")
-        save_file(s_file_name, pdf_data, '', '', folder=folder_name, is_private=0)
-        s_document_link = f"{frappe.utils.get_url()}/files/{s_file_name}"
+        x = save_file(s_file_name, pdf_data, '', '', folder=folder_name, is_private=0)
+        s_document_link = f"{frappe.utils.get_url()}/files/{x.file_name}"
 
         receiver = frappe.db.get_value("Contact", contact, "mobile_no")
 
