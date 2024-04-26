@@ -40,10 +40,26 @@ def send_whatsapp_msg(doc, notification, receivers):
             response = make_post_request(
                 base_url, headers=headers, data=json.dumps(payload))
             frappe.log_error(response)
+            try:
+                frappe.get_doc({
+                    "doctype": "Whatsapp Conversation",
+                    "document_type": doc.doctype,
+                    "document_name": doc.name,
+                    "type":"Outgoing",
+                    "from_contact": "Company",
+                    "to_contact": receiver,
+                    "wa_id": response["messages"][0]["id"],
+                    "wa_status": response["messages"][0]["message_status"]
+                }).insert(ignore_permissions=True)
+
+            except Exception as e:
+                frappe.log_error(message=e, title='Whatsapp Conversation_ERROR')
+            finally:
+                frappe.db.commit()
         frappe.msgprint("Whatsapp Sent")
 
     except Exception as e:
-        frappe.log_error(e)
+        frappe.log_error(message=e, title="Wharsapp Error")
         
 @frappe.whitelist()
 def send_whatsapp_report(html, document_caption, contact):
@@ -110,11 +126,11 @@ def send_whatsapp_report(html, document_caption, contact):
 
         response = make_post_request(
             base_url, headers=headers, data=payload)
-        frappe.log_error(f"req = {str(payload)} Resp = {str(response)}")
+        # frappe.log_error(f"req = {str(payload)} Resp = {str(response)}")
         frappe.msgprint("Whatsapp Sent")
 
     except Exception as e:
-        frappe.log_error(frappe.log_error(f"req = {str(payload)} Resp = {str(response)} err = {str(e)}"))
+        frappe.log_error(message=f"req = {str(payload)} Resp = {str(response)} err = {str(e)}", title='send_whatsapp_report_exception')
             
 def get_pdf_data(doctype:None, name: None, print_format: None, letterhead: None, is_report:False, report_html:None):
     
@@ -170,12 +186,20 @@ def whatsapp_template(receiver, doc, notification, document_link):
     
     body_parameters = []
     for field in notification.etpl_template_fields:
-        body_parameters.append(
+        if field.field_type == "Date":
+            body_parameters.append(
+                    {
+                        "type": "text",
+                        "text": str(frappe.format(doc_data[field.field_name], {'fieldtype': 'Date'}))
+                    }
+            )
+        else:
+            body_parameters.append(
                 {
                     "type": "text",
                     "text": str(doc_data[field.field_name])
                 }
-        )
+            )
     
     document_body = {
         "type": "body",
