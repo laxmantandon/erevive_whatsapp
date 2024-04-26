@@ -12,7 +12,7 @@ def callback():
     if frappe.request.method == "POST":
         try:
             frappe.get_doc({
-                "doctype": "Whatsapp Callback",
+                "doctype": "ETPL Whatsapp Callback",
                 "response": frappe.request.data
             }).insert(ignore_permissions=True)
 

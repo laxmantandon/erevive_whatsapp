@@ -42,7 +42,7 @@ def send_whatsapp_msg(doc, notification, receivers):
             frappe.log_error(message=response, title='whatsapp receiver error')
             try:
                 frappe.get_doc({
-                    "doctype": "Whatsapp Conversation",
+                    "doctype": "ETPL Whatsapp Conversation",
                     "document_type": doc.doctype,
                     "document_name": doc.name,
                     "type":"Outgoing",
