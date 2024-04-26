@@ -39,7 +39,7 @@ def send_whatsapp_msg(doc, notification, receivers):
 
             response = make_post_request(
                 base_url, headers=headers, data=json.dumps(payload))
-            frappe.log_error(response)
+            frappe.log_error(message=response, title='whatsapp receiver error')
             try:
                 frappe.get_doc({
                     "doctype": "Whatsapp Conversation",
