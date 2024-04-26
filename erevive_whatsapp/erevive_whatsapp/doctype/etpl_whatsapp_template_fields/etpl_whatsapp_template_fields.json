@@ -19,6 +19,7 @@
   {
    "fieldname": "field_type",
    "fieldtype": "Select",
+   "in_list_view": 1,
    "label": "field_type",
    "options": "\nText\nDate"
   }
@@ -26,7 +27,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-04-26 21:48:28.407854",
+ "modified": "2024-04-26 22:15:38.285912",
  "modified_by": "Administrator",
  "module": "Erevive Whatsapp",
  "name": "ETPL Whatsapp Template Fields",
